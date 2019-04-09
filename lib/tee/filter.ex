@@ -4,7 +4,7 @@ defmodule Membrane.Element.Tee.Filter do
   def_input_pad :input,
     availability: :always,
     mode: :pull,
-    demand_unit: :bytes,
+    demand_unit: :buffers,
     caps: :any
 
   def_output_pad :output1,
@@ -12,11 +12,10 @@ defmodule Membrane.Element.Tee.Filter do
     mode: :pull,
     caps: :any
 
-  def_output_pad(:output2,
+  def_output_pad :output2,
     availability: :always,
     mode: :pull,
     caps: :any
-  )
 
   @impl true
   def handle_process(:input, %Membrane.Buffer{} = buffer, _ctx, state) do
@@ -24,7 +23,12 @@ defmodule Membrane.Element.Tee.Filter do
   end
 
   @impl true
-  def handle_demand(:output, size, _unit, _ctx, state) do
+  def handle_demand(:output1, size, _unit, _ctx, state) do
+    {{:ok, demand: {:input, size}}, state}
+  end
+
+  @impl true
+  def handle_demand(:output2, size, _unit, _ctx, state) do
     {{:ok, demand: {:input, size}}, state}
   end
 end
