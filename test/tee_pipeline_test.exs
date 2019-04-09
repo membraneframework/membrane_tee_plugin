@@ -42,11 +42,10 @@ defmodule TestPipeline do
     assert {:ok, pid} = TestPipeline.make_pipeline(generator_from_data(range))
     assert Pipeline.play(pid) == :ok
 
-    Process.info(pid) |> IO.inspect()
-
     Enum.each(range, fn element ->
       IO.inspect(element)
-      assert_receive %Buffer{payload: ^element}, 5000
+      assert_receive %Buffer{payload: element}
+      assert_receive %Buffer{payload: element}
     end)
   end
 end

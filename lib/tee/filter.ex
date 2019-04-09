@@ -19,7 +19,7 @@ defmodule Membrane.Element.Tee.Filter do
 
   @impl true
   def handle_process(:input, %Membrane.Buffer{} = buffer, _ctx, state) do
-    {{:ok, buffer: [{:output1, buffer}, {:output2, buffer}]}, state}
+    {{:ok, buffer: {:output1, buffer}, buffer: {:output2, buffer}}, state}
   end
 
   @impl true
