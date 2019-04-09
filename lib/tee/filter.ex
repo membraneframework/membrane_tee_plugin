@@ -7,28 +7,26 @@ defmodule Membrane.Element.Tee.Filter do
     demand_unit: :buffers,
     caps: :any
 
-  def_output_pad :output1,
+  def_output_pad :output_static,
     availability: :always,
     mode: :pull,
     caps: :any
 
-  def_output_pad :output2,
-    availability: :always,
-    mode: :pull,
+  def_output_pad :output_dynamic,
+    availability: :on_request,
+    mode: :push,
     caps: :any
 
   @impl true
-  def handle_process(:input, %Membrane.Buffer{} = buffer, _ctx, state) do
-    {{:ok, buffer: {:output1, buffer}, buffer: {:output2, buffer}}, state}
+  def handle_process(:input, %Membrane.Buffer{} = buffer, ctx, state) do
+    {{:ok,
+      ctx.pads
+      |> Enum.filter(fn {_k, v} -> v.direction != :input end)
+      |> Enum.map(fn {k, _v} -> {:buffer, {k, buffer}} end)}, state}
   end
 
   @impl true
-  def handle_demand(:output1, size, _unit, _ctx, state) do
-    {{:ok, demand: {:input, size}}, state}
-  end
-
-  @impl true
-  def handle_demand(:output2, size, _unit, _ctx, state) do
+  def handle_demand(:output_static, size, _unit, _ctx, state) do
     {{:ok, demand: {:input, size}}, state}
   end
 end

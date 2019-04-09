@@ -21,8 +21,8 @@ defmodule TestPipeline do
       test_process: self(),
       links: %{
         {:src, :output} => {:tee, :input},
-        {:tee, :output1} => {:sink1, :input},
-        {:tee, :output2} => {:sink2, :input}
+        {:tee, :output_static} => {:sink1, :input},
+        {:tee, :output_dynamic} => {:sink2, :input}
       }
     })
   end
@@ -43,7 +43,6 @@ defmodule TestPipeline do
     assert Pipeline.play(pid) == :ok
 
     Enum.each(range, fn element ->
-      IO.inspect(element)
       assert_receive %Buffer{payload: element}
       assert_receive %Buffer{payload: element}
     end)
