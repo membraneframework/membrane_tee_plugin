@@ -17,7 +17,7 @@ defmodule Membrane.Element.Tee.Filter do
     mode: :push,
     caps: :any
 
-  defp passToAllOutputs(pads, element, value, state) do
+  defp pass_to_all_outputs(pads, element, value, state) do
     actions =
       pads
       |> Enum.filter(fn {_k, v} -> v.direction != :input end)
@@ -28,17 +28,17 @@ defmodule Membrane.Element.Tee.Filter do
 
   @impl true
   def handle_process(:input, %Membrane.Buffer{} = buffer, ctx, state) do
-    ctx.pads |> passToAllOutputs(:buffer, buffer, state)
+    ctx.pads |> pass_to_all_outputs(:buffer, buffer, state)
   end
 
   @impl true
   def handle_event(:input, event, ctx, state) do
-    ctx.pads |> passToAllOutputs(:event, event, state)
+    ctx.pads |> pass_to_all_outputs(:event, event, state)
   end
 
   @impl true
   def handle_caps(:input, caps, ctx, state) do
-    ctx.pads |> passToAllOutputs(:caps, caps, state)
+    ctx.pads |> pass_to_all_outputs(:caps, caps, state)
   end
 
   @impl true
