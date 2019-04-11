@@ -18,10 +18,12 @@ defmodule Membrane.Element.Tee.Filter do
     caps: :any
 
   defp passToAllOutputs(pads, element, value, state) do
-    {{:ok,
+    actions =
       pads
       |> Enum.filter(fn {_k, v} -> v.direction != :input end)
-      |> Enum.map(fn {k, _v} -> {element, {k, value}} end)}, state}
+      |> Enum.map(fn {k, _v} -> {element, {k, value}} end)
+
+    {{:ok, actions}, state}
   end
 
   @impl true
