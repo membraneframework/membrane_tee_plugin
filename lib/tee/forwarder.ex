@@ -3,6 +3,12 @@ defmodule Membrane.Element.Tee.Filter do
 
   @moduledoc """
   Element for forwarding packets to two or more outputs
+
+  There is one input pad `:input` and 2 output pads:
+  * `:output_static` - is a static pad which is always available and works in pull mode
+  * `:output_dynamic` - is a dynamic pad which is available on demand and works in push mode
+
+  Basically we can forward packets to more than one destination by linking dynamic pad to one or more inputs
   """
 
   def_input_pad :input,
