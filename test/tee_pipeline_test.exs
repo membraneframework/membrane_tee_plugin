@@ -17,7 +17,7 @@ defmodule TestPipeline do
         sink1: %Sink{target: self()},
         sink2: %Sink{target: self()}
       ],
-      monitored_callbacks: [:handle_notification],
+      monitored_callbacks: [],
       test_process: self(),
       links: %{
         {:src, :output} => {:tee, :input},

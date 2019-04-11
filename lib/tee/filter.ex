@@ -17,29 +17,26 @@ defmodule Membrane.Element.Tee.Filter do
     mode: :push,
     caps: :any
 
-  # TODO: extract pads mapping to separate function
+  defp passToAllOutputs(pads, element, value, state) do
+    {{:ok,
+      pads
+      |> Enum.filter(fn {_k, v} -> v.direction != :input end)
+      |> Enum.map(fn {k, _v} -> {element, {k, value}} end)}, state}
+  end
+
   @impl true
   def handle_process(:input, %Membrane.Buffer{} = buffer, ctx, state) do
-    {{:ok,
-      ctx.pads
-      |> Enum.filter(fn {_k, v} -> v.direction != :input end)
-      |> Enum.map(fn {k, _v} -> {:buffer, {k, buffer}} end)}, state}
+    ctx.pads |> passToAllOutputs(:buffer, buffer, state)
   end
 
   @impl true
   def handle_event(:input, event, ctx, state) do
-    {{:ok,
-      ctx.pads
-      |> Enum.filter(fn {_k, v} -> v.direction != :input end)
-      |> Enum.map(fn {k, _v} -> {:event, {k, event}} end)}, state}
+    ctx.pads |> passToAllOutputs(:event, event, state)
   end
 
   @impl true
   def handle_caps(:input, caps, ctx, state) do
-    {{:ok,
-      ctx.pads
-      |> Enum.filter(fn {_k, v} -> v.direction != :input end)
-      |> Enum.map(fn {k, _v} -> {:caps, {k, caps}} end)}, state}
+    ctx.pads |> passToAllOutputs(:caps, caps, state)
   end
 
   @impl true
