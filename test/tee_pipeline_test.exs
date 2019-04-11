@@ -28,16 +28,6 @@ defmodule TestPipeline do
     })
   end
 
-  # def generator_from_data(data) do
-  #   actions = Enum.map(data, fn element -> {:buffer, {:output, %Buffer{payload: element}}} end)
-
-  #   fn cnt, size ->
-  #     if(cnt != 0, do: cnt, else: actions)
-  #     |> Enum.split(size)
-  #     ~>> ({to_send, []} -> {to_send ++ [{:event, {:output, %EndOfStream{}}}], []})
-  #   end
-  # end
-
   test "forward input to two outputs" do
     range = 1..10 |> Enum.to_list()
     assert {:ok, pid} = TestPipeline.make_pipeline(range)
