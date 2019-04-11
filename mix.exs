@@ -11,7 +11,16 @@ defmodule Membrane.Element.Tee.MixProject do
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       source_url: @github_url,
-      deps: deps()
+      deps: deps(),
+      docs: docs()
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      extras: ["README.md"],
+      source_ref: "v#{@version}"
     ]
   end
 
@@ -26,7 +35,8 @@ defmodule Membrane.Element.Tee.MixProject do
   defp deps do
     [
       {:membrane_core, "~> 0.3.0"},
-      {:bunch, "~> 1.0"}
+      {:bunch, "~> 1.0"},
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
   end
 end

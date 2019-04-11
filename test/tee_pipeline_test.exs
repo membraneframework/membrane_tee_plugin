@@ -2,6 +2,7 @@ defmodule TestPipeline do
   @moduledoc false
   use ExUnit.Case, async: true
   use Bunch
+
   import Membrane.Testing.Pipeline.Assertions
 
   alias Membrane.Buffer

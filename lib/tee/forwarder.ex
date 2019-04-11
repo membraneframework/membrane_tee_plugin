@@ -1,6 +1,10 @@
 defmodule Membrane.Element.Tee.Filter do
   use Membrane.Element.Base.Filter
 
+  @moduledoc """
+  Element for forwarding packets to two or more outputs
+  """
+
   def_input_pad :input,
     availability: :always,
     mode: :pull,
