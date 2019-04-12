@@ -11,6 +11,7 @@ defmodule Membrane.Element.Tee.MixProject do
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       source_url: @github_url,
+      package: package(),
       deps: deps(),
       docs: docs()
     ]
@@ -29,6 +30,17 @@ defmodule Membrane.Element.Tee.MixProject do
       {:membrane_core, "~> 0.3.0"},
       {:bunch, "~> 1.0"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false}
+    ]
+  end
+
+  defp package do
+    [
+      maintainers: ["Membrane Team"],
+      licenses: ["Apache 2.0"],
+      links: %{
+        "GitHub" => @github_url,
+        "Membrane Framework Homepage" => "https://membraneframework.org"
+      }
     ]
   end
 end

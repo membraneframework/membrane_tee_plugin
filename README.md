@@ -4,7 +4,7 @@ This package provides elements that can be used to forward packets to multiple o
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed 
+If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 by adding `membrane_element_tee` to your list of dependencies in `mix.exs`:
 
 ```elixir
@@ -21,7 +21,7 @@ be found at [HexDocs](https://hexdocs.pm/membrane_element_tee).
 
 ## Copyright and License
 
-Copyright 2018, [Software Mansion](https://swmansion.com/?utm_source=git&utm_medium=readme&utm_campaign=membrane)
+Copyright 2019, [Software Mansion](https://swmansion.com/?utm_source=git&utm_medium=readme&utm_campaign=membrane)
 
 [![Software Mansion](https://membraneframework.github.io/static/logo/swm_logo_readme.png)](https://swmansion.com/?utm_source=git&utm_medium=readme&utm_campaign=membrane)
 
