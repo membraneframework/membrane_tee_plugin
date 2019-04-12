@@ -4,8 +4,7 @@ This package provides elements that can be used to forward packets to multiple o
 
 ## Installation
 
-This package can be installed
-by adding `membrane_element_tee` to your list of dependencies in `mix.exs`:
+This package can be installed by adding `membrane_element_tee` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -15,9 +14,7 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [HexDocs](https://hexdocs.pm/membrane_element_tee).
+The docs can be found at [HexDocs](https://hexdocs.pm/membrane_element_tee).
 
 ## Example
 
