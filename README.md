@@ -4,7 +4,7 @@ This package provides elements that can be used to forward packets to multiple o
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
+This package can be installed
 by adding `membrane_element_tee` to your list of dependencies in `mix.exs`:
 
 ```elixir
