@@ -30,7 +30,7 @@ defmodule TestPipeline do
   end
 
   test "forward input to two outputs" do
-    range = 1..10 |> Enum.to_list()
+    range = 1..10
     assert {:ok, pid} = TestPipeline.make_pipeline(range)
     assert Pipeline.play(pid) == :ok
     # Wait for EndOfStream message on both sinks
