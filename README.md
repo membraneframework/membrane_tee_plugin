@@ -38,13 +38,11 @@ defmodule FileMultiForwardPipeline do
       tee: Tee.Master,
       file_sink1: %File.Sink{location: "./destinationFile1"},
       file_sink2: %File.Sink{location: "./destinationFile2"},
-      file_sink3: %File.Sink{location: "./destinationFile3"},
     ]
     links = %{
       {:file_src, :output} => {:tee, :input},
       {:tee, :master} => {:file_sink1, :input},
       {:tee, :copy} => {:file_sink2, :input},
-      {:tee, :copy} => {:file_sink3, :input},
     }
 
     {{:ok, %Spec{children: children, links: links}}, %{}}
