@@ -1,12 +1,12 @@
-defmodule Membrane.Element.Tee.Filter do
+defmodule Membrane.Element.Tee.Master do
   use Membrane.Element.Base.Filter
 
   @moduledoc """
   Element for forwarding packets to two or more outputs
 
   There is one input pad `:input` and 2 output pads:
-  * `:output_static` - is a static pad which is always available and works in pull mode
-  * `:output_dynamic` - is a dynamic pad which is available on demand and works in push mode
+  * `:master` - is a static pad which is always available and works in pull mode
+  * `:copy` - is a dynamic pad which is available on demand and works in push mode
 
   Basically we can forward packets to more than one destination by linking dynamic pad to one or more inputs
   """
@@ -17,12 +17,12 @@ defmodule Membrane.Element.Tee.Filter do
     demand_unit: :buffers,
     caps: :any
 
-  def_output_pad :output_static,
+  def_output_pad :master,
     availability: :always,
     mode: :pull,
     caps: :any
 
-  def_output_pad :output_dynamic,
+  def_output_pad :copy,
     availability: :on_request,
     mode: :push,
     caps: :any
@@ -47,7 +47,7 @@ defmodule Membrane.Element.Tee.Filter do
   end
 
   @impl true
-  def handle_demand(:output_static, size, _unit, _ctx, state) do
+  def handle_demand(:master, size, :buffers, _ctx, state) do
     {{:ok, demand: {:input, size}}, state}
   end
 end

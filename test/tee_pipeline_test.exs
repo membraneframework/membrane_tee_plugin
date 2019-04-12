@@ -15,7 +15,7 @@ defmodule TestPipeline do
     Pipeline.start_link(%Pipeline.Options{
       elements: [
         src: %DataSource{data: data},
-        tee: Membrane.Element.Tee.Filter,
+        tee: Membrane.Element.Tee.Master,
         sink1: %Sink{target: self()},
         sink2: %Sink{target: self()}
       ],
@@ -23,8 +23,8 @@ defmodule TestPipeline do
       test_process: self(),
       links: %{
         {:src, :output} => {:tee, :input},
-        {:tee, :output_static} => {:sink1, :input},
-        {:tee, :output_dynamic} => {:sink2, :input}
+        {:tee, :master} => {:sink1, :input},
+        {:tee, :copy} => {:sink2, :input}
       }
     })
   end
@@ -33,6 +33,7 @@ defmodule TestPipeline do
     range = 1..10
     assert {:ok, pid} = TestPipeline.make_pipeline(range)
     assert Pipeline.play(pid) == :ok
+
     # Wait for EndOfStream message on both sinks
     assert_receive_message({:handle_notification, {{:end_of_stream, :input}, :sink1}}, 3000)
     assert_receive_message({:handle_notification, {{:end_of_stream, :input}, :sink2}}, 3000)
