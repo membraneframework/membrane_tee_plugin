@@ -23,6 +23,9 @@ be found at [HexDocs](https://hexdocs.pm/membrane_element_tee).
 
 Playing this pipeline should result in copying the source file to all destinations files (sinks)
 
+before playing it prepare yourself a file like this:
+`echo "Membrane Framework is cool" > /tmp/sourcefile`
+
 ```elixir
 defmodule FileMultiForwardPipeline do
   use Membrane.Pipeline
