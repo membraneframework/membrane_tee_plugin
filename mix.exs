@@ -9,11 +9,13 @@ defmodule Membrane.Element.Tee.MixProject do
       app: :membrane_element_tee,
       version: @version,
       elixir: "~> 1.7",
-      start_permanent: Mix.env() == :prod,
-      source_url: @github_url,
+      name: "Membrane Element Tee",
+      description: "Membrane Multimedia Framework (Element Tee)",
       package: package(),
-      deps: deps(),
-      docs: docs()
+      source_url: @github_url,
+      docs: docs(),
+      start_permanent: Mix.env() == :prod,
+      deps: deps()
     ]
   end
 
