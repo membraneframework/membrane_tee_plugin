@@ -1,4 +1,4 @@
-defmodule TestPipeline do
+defmodule Membrane.Element.Tee.MasterTest do
   @moduledoc false
   use ExUnit.Case, async: true
   use Bunch
