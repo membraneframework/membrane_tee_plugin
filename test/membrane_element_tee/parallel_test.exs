@@ -31,7 +31,7 @@ defmodule Membrane.Element.Tee.ParallelTest do
     })
   end
 
-  test "forward input to two outputs" do
+  test "forward input to every output" do
     range = 1..10
     assert {:ok, pid} = make_pipeline(range)
     assert Pipeline.play(pid) == :ok
