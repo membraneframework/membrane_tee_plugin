@@ -8,9 +8,8 @@ defmodule Membrane.Element.Tee.Parallel do
 
   * `:output` - is a dynamic pad which is available on request and works in pull mode
 
-
   Basically we can forward packets to more than one destination by linking dynamic pad to one or more inputs. Packets are forwarded only when all output pads send demands.
-  To avoid overriding your links to output pads, create them specific id ({:tee, :output, id})
+  To avoid overriding your links to output pads, create them with specific id ({:tee, :output, id})
   """
 
   def_input_pad :input,
@@ -31,34 +30,29 @@ defmodule Membrane.Element.Tee.Parallel do
   end
 
   @impl true
-  def handle_process(:input, %Membrane.Buffer{} = buffer, ctx, state) do
-    ctx.pads |> pass_to_all_outputs(:buffer, buffer, state)
-  end
-
-  @impl true
-  def handle_caps(:input, caps, ctx, state) do
-    ctx.pads |> pass_to_all_outputs(:caps, caps, state)
-  end
-
-  defp pass_to_all_outputs(pads, action, value, state) do
-    actions =
-      pads
-      |> Enum.filter(fn {_k, v} -> v.direction != :input end)
-      |> Enum.map(fn {k, _v} -> {action, {k, value}} end)
-
-    {{:ok, actions}, state}
+  def handle_process(:input, %Membrane.Buffer{} = buffer, _ctx, state) do
+    {{:ok, forward: buffer}, state}
   end
 
   @impl true
   def handle_demand({:dynamic, type, id}, size, :buffers, ctx, state) do
     state = Map.put(state, {type, id}, size)
+    check_number_of_demands(ctx, state)
+  end
 
-    if length(Map.keys(state)) == length(Map.keys(ctx.pads)) - 1 do
-      minimal_size = Enum.reduce(Map.values(state), fn acc, x -> min(acc, x) end)
+  defp check_number_of_demands(ctx, state) do
+    if map_size(state) == map_size(ctx.pads) - 1 do
+      minimal_size = Enum.reduce(Map.values(state), &min/2)
       state = %{}
       {{:ok, demand: {:input, minimal_size}}, state}
     else
       {:ok, state}
     end
+  end
+
+  @impl true
+  def handle_pad_removed({:dynamic, type, id}, ctx, state) do
+    state = Map.drop(state, [{type, id}])
+    check_number_of_demands(ctx, state)
   end
 end
