@@ -40,10 +40,11 @@ defmodule Membrane.Element.Tee.Parallel do
     check_number_of_demands(ctx, state)
   end
 
-  defp check_number_of_demands(ctx, state) do
-    if map_size(state) == map_size(ctx.pads) - 1 do
-      minimal_size = Enum.reduce(Map.values(state), &min/2)
-      state = %{}
+  defp check_number_of_demands(_ctx, state) do
+    minimal_size = Enum.reduce(Map.values(state), &min/2)
+
+    if minimal_size > 0 do
+      state = Bunch.Map.map_values(state, &max(0, &1 - minimal_size))
       {{:ok, demand: {:input, minimal_size}}, state}
     else
       {:ok, state}
@@ -52,7 +53,13 @@ defmodule Membrane.Element.Tee.Parallel do
 
   @impl true
   def handle_pad_removed({:dynamic, type, id}, ctx, state) do
-    state = Map.drop(state, [{type, id}])
+    state = Map.drop(state, {type, id})
     check_number_of_demands(ctx, state)
+  end
+
+  @impl true
+  def handle_pad_added({:dynamic, type, id}, _ctx, state) do
+    state = Map.put(state, {type, id}, 0)
+    {:ok, state}
   end
 end
