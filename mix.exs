@@ -29,7 +29,7 @@ defmodule Membrane.Element.Tee.MixProject do
 
   defp deps do
     [
-      {:membrane_core, "~> 0.3.0"},
+      {:membrane_core, github: "membraneframework/membrane-core", branch: "testing-pipeline"},
       {:bunch, "~> 1.0"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
