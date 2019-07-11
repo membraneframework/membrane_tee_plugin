@@ -21,14 +21,16 @@ The docs can be found at [HexDocs](https://hexdocs.pm/membrane_element_tee).
 
 ## Examples
 
-### `Tee.Master`
+### `Membrane.Element.Tee.Master`
 
 This element has one `:master` output pad that dictates the speed of processing data
 and dynamic `:copy` pad working in `:push` mode mirroring `:master` pad.
 
 Playing this pipeline should result in copying the source file to all destination files (sinks).
-Before playing it, make sure source file exists, e.g. like this:
+Before playing it, make sure that the source file exists, e.g. like this:
 `echo "Membrane Framework is cool" > /tmp/source_file`
+
+You also need [`:membrane_element_file`](https://github.com/membraneframework/membrane-element-file) in project dependencies to run this pipeline.
 
 ```elixir
 defmodule FileMultiForwardPipeline do
