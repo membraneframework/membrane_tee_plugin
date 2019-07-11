@@ -1,6 +1,9 @@
 # Membrane Multimedia Framework: Tee
 
-This package provides elements that can be used to forward packets to multiple outputs.
+[![Hex.pm](https://img.shields.io/hexpm/v/membrane_element_tee.svg)](https://hex.pm/packages/membrane_element_tee)
+[![CircleCI](https://circleci.com/gh/membraneframework/membrane-element-tee.svg?style=svg)](https://circleci.com/gh/membraneframework/membrane-element-tee)
+
+This package provides elements that can be used to branch stream processing in pipeline, e.g. send data from one source to two or more sinks.
 
 ## Installation
 
@@ -16,28 +19,30 @@ end
 
 The docs can be found at [HexDocs](https://hexdocs.pm/membrane_element_tee).
 
-## Example
+## Examples
 
-Playing this pipeline should result in copying the source file to all destinations files (sinks)
+### `Tee.Master`
 
-before playing it prepare yourself a file like this:
-`echo "Membrane Framework is cool" > /tmp/sourcefile`
+This element has one `:master` output pad that dictates the speed of processing data
+and dynamic `:copy` pad working in `:push` mode mirroring `:master` pad.
+
+Playing this pipeline should result in copying the source file to all destination files (sinks).
+Before playing it, make sure source file exists, e.g. like this:
+`echo "Membrane Framework is cool" > /tmp/source_file`
 
 ```elixir
 defmodule FileMultiForwardPipeline do
   use Membrane.Pipeline
   alias Pipeline.Spec
-  alias Membrane.Element.File
-  alias Membrane.Element.Tee
+  alias Membrane.Element.{File, Tee}
 
-  @doc false
   @impl true
   def handle_init(_) do
     children = [
-      file_src: %File.Source{location: "/tmp/sourceFile"},
+      file_src: %File.Source{location: "/tmp/source_file"},
       tee: Tee.Master,
-      file_sink1: %File.Sink{location: "./destinationFile1"},
-      file_sink2: %File.Sink{location: "./destinationFile2"},
+      file_sink1: %File.Sink{location: "/tmp/destination_file1"},
+      file_sink2: %File.Sink{location: "/tmp/destination_file2"},
     ]
     links = %{
       {:file_src, :output} => {:tee, :input},
@@ -50,12 +55,10 @@ defmodule FileMultiForwardPipeline do
 end
 ```
 
-Notice we use one `:master` pad which handles demands, and `:copy` pads which just forward same buffers to one or more sinks.
-
 ## Copyright and License
 
-Copyright 2019, [Software Mansion](https://swmansion.com/?utm_source=git&utm_medium=readme&utm_campaign=membrane)
+Copyright 2019, [Software Mansion](https://swmansion.com/?utm_source=git&utm_medium=readme&utm_campaign=membrane-element-tee)
 
-[![Software Mansion](https://membraneframework.github.io/static/logo/swm_logo_readme.png)](https://swmansion.com/?utm_source=git&utm_medium=readme&utm_campaign=membrane)
+[![Software Mansion](https://membraneframework.github.io/static/logo/swm_logo_readme.png)](https://swmansion.com/?utm_source=git&utm_medium=readme&utm_campaign=membrane-element-tee)
 
 Licensed under the [Apache License, Version 2.0](LICENSE)
