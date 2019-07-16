@@ -2,13 +2,14 @@ defmodule Membrane.Element.Tee.Master do
   use Membrane.Element.Base.Filter
 
   @moduledoc """
-  Element for forwarding packets to two or more outputs
+  Element for forwarding buffers to at least one output pad
 
-  There is one input pad `:input` and 2 output pads:
+  It has one input pad `:input` and 2 output pads:
   * `:master` - is a static pad which is always available and works in pull mode
-  * `:copy` - is a dynamic pad which is available on demand and works in push mode
+  * `:copy` - is a dynamic pad that can be linked to any number of elements (including 0) and works in push mode
 
-  Basically we can forward packets to more than one destination by linking dynamic pad to one or more inputs
+  The `:master` pad dictates the speed of processing data and any element (or elements) connected to `:copy` pad
+  will receive the same data as `:master`
   """
 
   def_input_pad :input,
