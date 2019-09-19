@@ -9,6 +9,9 @@ defmodule Membrane.Element.Tee.DeletedElementTest do
   alias Membrane.Testing.{Source, Pipeline, Sink}
 
   defmodule Pipe do
+    use Membrane.Pipeline
+
+    @impl true
     def handle_init(data) do
       children = [
         src: %Source{output: data},
@@ -30,33 +33,6 @@ defmodule Membrane.Element.Tee.DeletedElementTest do
 
       {{:ok, spec}, %{}}
     end
-
-    def handle_spec_started(_elements, state),
-      do: {:ok, state}
-
-    def handle_stopped_to_prepared(state),
-      do: {:ok, state}
-
-    def handle_playing_to_prepared(state),
-      do: {:ok, state}
-
-    def handle_playing_to_stopped(state),
-      do: {:ok, state}
-
-    def handle_prepared_to_stopped(state),
-      do: {:ok, state}
-
-    def handle_prepared_to_playing(state),
-      do: {:ok, state}
-
-    def handle_notification(_, _, state),
-      do: {:ok, state}
-
-    def handle_other({:delete, name}, state),
-      do: {{:ok, remove_child: name}, state}
-
-    def handle_other(_, state),
-      do: {:ok, state}
   end
 
   def make_pipeline(data) do
