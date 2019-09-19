@@ -9,7 +9,7 @@ This package can be installed by adding `membrane_element_tee` to your list of d
 ```elixir
 def deps do
   [
-    {:membrane_element_tee, "~> 0.1.0"}
+    {:membrane_element_tee, "~> 0.2.0"}
   ]
 end
 ```

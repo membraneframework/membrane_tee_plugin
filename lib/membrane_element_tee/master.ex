@@ -1,5 +1,5 @@
 defmodule Membrane.Element.Tee.Master do
-  use Membrane.Element.Base.Filter
+  use Membrane.Filter
 
   @moduledoc """
   Element for forwarding packets to two or more outputs
