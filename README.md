@@ -21,14 +21,15 @@ The docs can be found at [HexDocs](https://hexdocs.pm/membrane_element_tee).
 
 ## Examples
 
-### `Membrane.Element.Tee.Master`
+### `Membrane.Element.Tee.Parallel`
 
-This element has one `:master` output pad that dictates the speed of processing data
-and dynamic `:copy` pad working in `:push` mode mirroring `:master` pad.
+This element has dynamic `:output` pads working in `:pull` mode. Packets are forwarded 
+only when all output pads send demands, which means that the slowest output pad dictates 
+the speed of processing data.
 
 Playing this pipeline should result in copying the source file to all destination files (sinks).
 Before playing it, make sure that the source file exists, e.g. like this:
-`echo "Membrane Framework is cool" > /tmp/source_file`
+`echo "Membrane Framework is cool" > /tmp/source_text_file`
 
 You also need [`:membrane_element_file`](https://github.com/membraneframework/membrane-element-file) in project dependencies to run this pipeline.
 
@@ -41,15 +42,50 @@ defmodule FileMultiForwardPipeline do
   @impl true
   def handle_init(_) do
     children = [
-      file_src: %File.Source{location: "/tmp/source_file"},
-      tee: Tee.Master,
+      file_src: %File.Source{location: "tmp/source_text_file"},
+      tee: Tee.Parallel,
       file_sink1: %File.Sink{location: "/tmp/destination_file1"},
       file_sink2: %File.Sink{location: "/tmp/destination_file2"},
     ]
     links = %{
       {:file_src, :output} => {:tee, :input},
-      {:tee, :master} => {:file_sink1, :input},
-      {:tee, :copy} => {:file_sink2, :input},
+      {:tee, :output, 1} => {:file_sink1, :input},
+      {:tee, :output, 2} => {:file_sink2, :input},
+    }
+
+    {{:ok, %Spec{children: children, links: links}}, %{}}
+  end
+end
+```
+
+### `Membrane.Element.Tee.Master`
+
+This element has one `:master` output pad that dictates the speed of processing data
+and dynamic `:copy` pad working in `:push` mode mirroring `:master` pad.
+
+Playing this pipeline should result in playing mp3 source file and copying it to the destination file.
+Before playing it, make sure you have valid source file, e.g. [this one](https://github.com/membraneframework/membrane-demo/blob/v0.3/sample.mp3).
+
+You also need [`:membrane_element_file`](https://github.com/membraneframework/membrane-element-file) and [`:membrane_element_portaudio`](https://github.com/membraneframework/membrane-element-portaudio) in project dependencies to run this pipeline.
+
+```elixir
+defmodule AudioPlayAndCopyPipeline do
+  use Membrane.Pipeline
+  alias Pipeline.Spec
+  alias Membrane.Element.{File, Tee, PortAudio}
+
+  @impl true
+  def handle_init(_) do
+    children = [
+      file_src: %File.Source{location: "/tmp/source_file.mp3"},
+      tee: Tee.Master,
+      audio_sink: Membrane.Element.PortAudio.Sink,
+      file_sink: %File.Sink{location: "/tmp/destination_file.mp3"},
+    ]
+    links = %{
+      {:file_src, :output} => {:tee, :input},
+      {:tee, :master} => {:audio_sink, :input},
+      {:tee, :copy} => {:file_sink, :input},
     }
 
     {{:ok, %Spec{children: children, links: links}}, %{}}
