@@ -20,18 +20,17 @@ defmodule Membrane.Element.Tee.DeletedElementTest do
         sink2: %Sink{}
       ]
 
-      links = %{
-        {:src, :output} => {:tee, :input},
-        {:tee, :output, 1} => {:sink1, :input},
-        {:tee, :output, 2} => {:sink2, :input}
-      }
+      links = [
+        link(:src) |> to(:tee) |> to(:sink1),
+        link(:tee) |> to(:sink2)
+      ]
 
-      spec = %Membrane.Pipeline.Spec{
+      spec = %ParentSpec{
         children: children,
         links: links
       }
 
-      {{:ok, spec}, %{}}
+      {{:ok, spec: spec}, %{}}
     end
   end
 

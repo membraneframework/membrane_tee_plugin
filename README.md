@@ -12,7 +12,7 @@ This package can be installed by adding `membrane_element_tee` to your list of d
 ```elixir
 def deps do
   [
-    {:membrane_element_tee, "~> 0.2.0"}
+    {:membrane_element_tee, "~> 0.3.0"}
   ]
 end
 ```
@@ -23,8 +23,8 @@ The docs can be found at [HexDocs](https://hexdocs.pm/membrane_element_tee).
 
 ### `Membrane.Element.Tee.Parallel`
 
-This element has dynamic `:output` pads working in `:pull` mode. Packets are forwarded 
-only when all output pads send demands, which means that the slowest output pad dictates 
+This element has dynamic `:output` pads working in `:pull` mode. Packets are forwarded
+only when all output pads send demands, which means that the slowest output pad dictates
 the speed of processing data.
 
 Playing this pipeline should result in copying the source file to all destination files (sinks).
@@ -36,7 +36,6 @@ You also need [`:membrane_element_file`](https://github.com/membraneframework/me
 ```elixir
 defmodule FileMultiForwardPipeline do
   use Membrane.Pipeline
-  alias Pipeline.Spec
   alias Membrane.Element.{File, Tee}
 
   @impl true
@@ -47,13 +46,12 @@ defmodule FileMultiForwardPipeline do
       file_sink1: %File.Sink{location: "/tmp/destination_file1"},
       file_sink2: %File.Sink{location: "/tmp/destination_file2"},
     ]
-    links = %{
-      {:file_src, :output} => {:tee, :input},
-      {:tee, :output, 1} => {:file_sink1, :input},
-      {:tee, :output, 2} => {:file_sink2, :input},
-    }
+    links = [
+      link(:file_src) |> to(:tee) |> to(:file_sink1),
+      link(:tee) |> to(:file_sink2)
+    ]
 
-    {{:ok, %Spec{children: children, links: links}}, %{}}
+    {{:ok, %ParentSpec{children: children, links: links}}, %{}}
   end
 end
 ```
@@ -71,7 +69,6 @@ You also need [`:membrane_element_file`](https://github.com/membraneframework/me
 ```elixir
 defmodule AudioPlayAndCopyPipeline do
   use Membrane.Pipeline
-  alias Pipeline.Spec
   alias Membrane.Element.{File, Tee, PortAudio}
 
   @impl true
@@ -82,13 +79,13 @@ defmodule AudioPlayAndCopyPipeline do
       audio_sink: Membrane.Element.PortAudio.Sink,
       file_sink: %File.Sink{location: "/tmp/destination_file.mp3"},
     ]
-    links = %{
-      {:file_src, :output} => {:tee, :input},
-      {:tee, :master} => {:audio_sink, :input},
-      {:tee, :copy} => {:file_sink, :input},
-    }
+    links = [
+      link(:file_src) |> to(:tee),
+      link(:tee) |> via_out(:master) |> to(:audio_sink),
+      link(:tee) |> via_out(:copy) |> to(:file_sink)
+    ]
 
-    {{:ok, %Spec{children: children, links: links}}, %{}}
+    {{:ok, %ParentSpec{children: children, links: links}}, %{}}
   end
 end
 ```

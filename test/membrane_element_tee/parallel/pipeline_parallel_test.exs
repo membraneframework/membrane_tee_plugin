@@ -9,6 +9,8 @@ defmodule Membrane.Element.Tee.PipelineParallelTest do
   alias Membrane.Testing.{Source, Pipeline, Sink}
 
   def make_pipeline(data) do
+    import Membrane.ParentSpec
+
     Pipeline.start_link(%Pipeline.Options{
       elements: [
         src: %Source{output: data},
@@ -17,12 +19,11 @@ defmodule Membrane.Element.Tee.PipelineParallelTest do
         sink2: %Sink{},
         sink3: %Sink{}
       ],
-      links: %{
-        {:src, :output} => {:tee, :input},
-        {:tee, :output, 1} => {:sink1, :input},
-        {:tee, :output, 2} => {:sink2, :input},
-        {:tee, :output, 3} => {:sink3, :input}
-      }
+      links: [
+        link(:src) |> to(:tee) |> to(:sink1),
+        link(:tee) |> to(:sink2),
+        link(:tee) |> to(:sink3)
+      ]
     })
   end
 

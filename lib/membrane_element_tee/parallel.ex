@@ -35,8 +35,8 @@ defmodule Membrane.Element.Tee.Parallel do
   end
 
   @impl true
-  def handle_demand({:dynamic, type, id}, size, :buffers, ctx, state) do
-    state = Map.put(state, {type, id}, size)
+  def handle_demand(Pad.ref(:output, id), size, :buffers, ctx, state) do
+    state = Map.put(state, id, size)
     check_number_of_demands(ctx, state)
   end
 
@@ -52,14 +52,14 @@ defmodule Membrane.Element.Tee.Parallel do
   end
 
   @impl true
-  def handle_pad_removed({:dynamic, type, id}, ctx, state) do
-    {_, state} = Map.pop(state, {type, id})
+  def handle_pad_removed(Pad.ref(:output, id), ctx, state) do
+    {_, state} = Map.pop(state, id)
     check_number_of_demands(ctx, state)
   end
 
   @impl true
-  def handle_pad_added({:dynamic, type, id}, _ctx, state) do
-    state = Map.put(state, {type, id}, 0)
+  def handle_pad_added(Pad.ref(:output, id), _ctx, state) do
+    state = Map.put(state, id, 0)
     {:ok, state}
   end
 end
