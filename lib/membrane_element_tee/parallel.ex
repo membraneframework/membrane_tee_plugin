@@ -1,16 +1,13 @@
 defmodule Membrane.Element.Tee.Parallel do
-  use Membrane.Filter
-
   @moduledoc """
-  Element for forwarding packets to two or more outputs
+  Element for forwarding packets to multiple outputs
 
-  There is one input pad `:input` and output pad:
-
-  * `:output` - is a dynamic pad which is available on request and works in pull mode
-
-  Basically we can forward packets to more than one destination by linking dynamic pad to one or more inputs. Packets are forwarded only when all output pads send demands.
-  To avoid overriding your links to output pads, create them with specific id ({:tee, :output, id})
+  To use, link this element to one preceding element via `input` and multiple
+  succesive elements via `output`. Each buffer is forwarded only when demand for
+  it comes in via each output.
   """
+
+  use Membrane.Filter
 
   def_input_pad :input,
     availability: :always,
@@ -35,31 +32,23 @@ defmodule Membrane.Element.Tee.Parallel do
   end
 
   @impl true
-  def handle_demand(Pad.ref(:output, id), size, :buffers, ctx, state) do
-    state = Map.put(state, id, size)
-    check_number_of_demands(ctx, state)
-  end
-
-  defp check_number_of_demands(_ctx, state) do
-    minimal_size = Enum.reduce(Map.values(state), &min/2)
-
-    if minimal_size > 0 do
-      state = Bunch.Map.map_values(state, &max(0, &1 - minimal_size))
-      {{:ok, demand: {:input, minimal_size}}, state}
-    else
-      {:ok, state}
-    end
+  def handle_demand(Pad.ref(:output, _id), _size, :buffers, ctx, state) do
+    {{:ok, make_demands(ctx)}, state}
   end
 
   @impl true
-  def handle_pad_removed(Pad.ref(:output, id), ctx, state) do
-    {_, state} = Map.pop(state, id)
-    check_number_of_demands(ctx, state)
+  def handle_pad_removed(Pad.ref(:output, _id), ctx, state) do
+    {{:ok, make_demands(ctx)}, state}
   end
 
-  @impl true
-  def handle_pad_added(Pad.ref(:output, id), _ctx, state) do
-    state = Map.put(state, id, 0)
-    {:ok, state}
+  defp make_demands(ctx) do
+    minimal_size =
+      ctx.pads
+      |> Bunch.KVEnum.values()
+      |> Enum.filter(&(&1.direction == :output))
+      |> Enum.map(& &1.demand)
+      |> Enum.min(fn -> 0 end)
+
+    [demand: {:input, minimal_size}]
   end
 end
