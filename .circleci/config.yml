@@ -2,7 +2,7 @@ version: 2.0
 jobs:
   build:
     docker:
-      - image: circleci/elixir:1.8
+      - image: membrane/bionic-membrane:latest
         environment:
           MIX_ENV: test
 
@@ -10,7 +10,8 @@ jobs:
 
     steps:
       - checkout
-      - run: mix local.hex --force
       - run: mix deps.get
       - run: mix format --check-formatted
+      - run: mix compile --force --warnings-as-errors
       - run: mix test
+      - run: MIX_ENV=dev mix docs && ! mix docs 2>&1 | grep -q "warning:"
