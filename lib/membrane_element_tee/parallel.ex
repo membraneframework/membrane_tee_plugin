@@ -2,8 +2,8 @@ defmodule Membrane.Element.Tee.Parallel do
   @moduledoc """
   Element for forwarding packets to multiple outputs
 
-  To use, link this element to one preceding element via `input` and multiple
-  succesive elements via `output`. Each buffer is forwarded only when demand for
+  To use, link this element to one preceding element via `input` pad and multiple
+  succesive elements via `output` pads. Each buffer is forwarded only when demand for
   it comes in via each output.
   """
 
