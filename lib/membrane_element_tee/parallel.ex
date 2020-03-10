@@ -1,6 +1,8 @@
 defmodule Membrane.Element.Tee.Parallel do
   @moduledoc """
-  Element for forwarding packets to multiple outputs
+  Element for forwarding packets to multiple outputs.
+
+  The speed of processing is limited by the slowest consuming output.
 
   To use, link this element to one preceding element via `input` pad and multiple
   succesive elements via `output` pads. Each buffer is forwarded only when demand for
