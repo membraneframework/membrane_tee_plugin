@@ -39,6 +39,11 @@ defmodule Membrane.Element.Tee.Parallel do
   end
 
   @impl true
+  def handle_pad_removed(Pad.ref(:output, _id), %{playback_state: :stopped}, state) do
+    {:ok, state}
+  end
+
+  @impl true
   def handle_pad_removed(Pad.ref(:output, _id), ctx, state) do
     {{:ok, make_demands(ctx)}, state}
   end
