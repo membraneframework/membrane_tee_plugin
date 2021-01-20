@@ -55,6 +55,7 @@ defmodule Membrane.Element.Tee.Parallel do
       |> Enum.filter(&(&1.direction == :output))
       |> Enum.map(& &1.demand)
       |> Enum.min(fn -> 0 end)
+      |> max(0)
 
     [demand: {:input, minimal_size}]
   end
