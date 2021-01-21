@@ -1,7 +1,7 @@
 defmodule Membrane.Element.Tee.MixProject do
   use Mix.Project
 
-  @version "0.4.0"
+  @version "0.4.1"
   @github_url "https://github.com/membraneframework/membrane-element-tee"
 
   def project do
@@ -22,7 +22,7 @@ defmodule Membrane.Element.Tee.MixProject do
   defp docs do
     [
       main: "readme",
-      extras: ["README.md"],
+      extras: ["README.md", "LICENSE"],
       source_ref: "v#{@version}"
     ]
   end
@@ -32,7 +32,7 @@ defmodule Membrane.Element.Tee.MixProject do
       {:membrane_core, "~> 0.6.0"},
       {:bunch, "~> 1.0"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false}
+      {:dialyxir, "~> 1.0.0", only: [:dev], runtime: false}
     ]
   end
 
