@@ -1,7 +1,7 @@
 # Membrane Multimedia Framework: Tee
 
 [![Hex.pm](https://img.shields.io/hexpm/v/membrane_element_tee.svg)](https://hex.pm/packages/membrane_element_tee)
-[![CircleCI](https://circleci.com/gh/membraneframework/membrane-element-tee.svg?style=svg)](https://circleci.com/gh/membraneframework/membrane-element-tee)
+[![CircleCI](https://circleci.com/gh/membraneframework/membrane_element_tee.svg?style=svg)](https://circleci.com/gh/membraneframework/membrane_element_tee)
 
 This package provides elements that can be used to branch stream processing in pipeline, e.g. send data from one source to two or more sinks.
 
@@ -12,7 +12,7 @@ This package can be installed by adding `membrane_element_tee` to your list of d
 ```elixir
 def deps do
   [
-    {:membrane_element_tee, "~> 0.3.0"}
+    {:membrane_element_tee, "~> 0.5.0"}
   ]
 end
 ```
