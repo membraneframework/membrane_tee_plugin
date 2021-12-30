@@ -42,7 +42,7 @@ defmodule FileMultiForwardPipeline do
   @impl true
   def handle_init(_) do
     children = [
-      file_src: %File.Source{location: "tmp/source_text_file"},
+      file_src: %File.Source{location: "/tmp/source_text_file"},
       tee: Tee.Parallel,
       file_sink1: %File.Sink{location: "/tmp/destination_file1"},
       file_sink2: %File.Sink{location: "/tmp/destination_file2"},
@@ -77,7 +77,7 @@ defmodule AudioPlayAndCopyPipeline do
     children = [
       file_src: %File.Source{location: "/tmp/source_file.mp3"},
       tee: Tee.Master,
-      audio_sink: Membrane.Element.PortAudio.Sink,
+      audio_sink: PortAudio.Sink,
       file_sink: %File.Sink{location: "/tmp/destination_file.mp3"},
     ]
     links = [

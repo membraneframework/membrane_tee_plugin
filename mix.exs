@@ -6,7 +6,7 @@ defmodule Membrane.Tee.MixProject do
 
   def project do
     [
-      app: :membrane_element_tee,
+      app: :membrane_tee_plugin,
       version: @version,
       elixir: "~> 1.7",
       name: "Membrane Tee Plugin",
@@ -31,8 +31,9 @@ defmodule Membrane.Tee.MixProject do
     [
       {:membrane_core, "~> 0.8.0"},
       {:bunch, "~> 1.0"},
-      {:ex_doc, "~> 0.19", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0.0", only: [:dev], runtime: false}
+      {:ex_doc, "~> 0.26", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.1", only: :dev, runtime: false},
+      {:credo, "~> 1.6.1", only: :dev, runtime: false}
     ]
   end
 
