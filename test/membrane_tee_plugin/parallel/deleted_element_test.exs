@@ -1,4 +1,4 @@
-defmodule Membrane.Element.Tee.DeletedElementTest do
+defmodule Membrane.Tee.DeletedElementTest do
   @moduledoc false
   use ExUnit.Case, async: true
   use Bunch
@@ -15,7 +15,7 @@ defmodule Membrane.Element.Tee.DeletedElementTest do
     def handle_init(data) do
       children = [
         src: %Source{output: data},
-        tee: Membrane.Element.Tee.Parallel,
+        tee: Membrane.Tee.Parallel,
         sink1: %Sink{},
         sink2: %Sink{}
       ]
@@ -58,5 +58,7 @@ defmodule Membrane.Element.Tee.DeletedElementTest do
     Enum.each(range, fn element ->
       assert_sink_buffer(pid, :sink2, %Buffer{payload: ^element})
     end)
+
+    Pipeline.stop_and_terminate(pid, blocking?: true)
   end
 end

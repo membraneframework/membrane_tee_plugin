@@ -1,16 +1,16 @@
-defmodule Membrane.Element.Tee.MixProject do
+defmodule Membrane.Tee.MixProject do
   use Mix.Project
 
   @version "0.6.0"
-  @github_url "https://github.com/membraneframework/membrane-element-tee"
+  @github_url "https://github.com/membraneframework/membrane_tee_plugin"
 
   def project do
     [
       app: :membrane_element_tee,
       version: @version,
       elixir: "~> 1.7",
-      name: "Membrane Element Tee",
-      description: "Membrane Multimedia Framework (Element Tee)",
+      name: "Membrane Tee Plugin",
+      description: "Plugin for splitting data from a single input to multiple outputs",
       package: package(),
       source_url: @github_url,
       docs: docs(),

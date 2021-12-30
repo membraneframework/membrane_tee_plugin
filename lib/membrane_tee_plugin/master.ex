@@ -1,4 +1,4 @@
-defmodule Membrane.Element.Tee.Master do
+defmodule Membrane.Tee.Master do
   use Membrane.Filter
 
   @moduledoc """

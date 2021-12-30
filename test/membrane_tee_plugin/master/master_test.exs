@@ -1,7 +1,7 @@
-defmodule Membrane.Element.Tee.MasterTest do
+defmodule Membrane.Tee.MasterTest do
   use ExUnit.Case
 
-  alias Membrane.Element.Tee.Master
+  alias Membrane.Tee.Master
 
   describe "Tee Master element" do
     test "passes received buffers to all pads" do

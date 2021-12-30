@@ -1,4 +1,4 @@
-defmodule Membrane.Element.Tee.Parallel do
+defmodule Membrane.Tee.Parallel do
   @moduledoc """
   Element for forwarding packets to multiple outputs.
 
