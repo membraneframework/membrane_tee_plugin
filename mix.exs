@@ -29,7 +29,7 @@ defmodule Membrane.Tee.MixProject do
 
   defp deps do
     [
-      {:membrane_core, "~> 0.8.0"},
+      {:membrane_core, github: "membraneframework/membrane_core", tag: "v0.9.0-rc.0"},
       {:bunch, "~> 1.0"},
       {:ex_doc, "~> 0.26", only: :dev, runtime: false},
       {:dialyxir, "~> 1.1", only: :dev, runtime: false},

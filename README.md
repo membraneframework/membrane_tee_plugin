@@ -57,6 +57,12 @@ defmodule FileMultiForwardPipeline do
 end
 ```
 
+### `Membrane.Tee.PushOutput`
+
+This element works like `Membrane.Tee.Parallel` but doesn't care about the speed of processing of elements connected to its outputs.
+If such an element doesn't process data fast enough, it crashes with the toilet overflow error. In other words, the input pad dictates
+the speed of processing.
+
 ### `Membrane.Tee.Master`
 
 This element has one `:master` output pad that dictates the speed of processing data
