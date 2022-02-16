@@ -22,11 +22,5 @@ defmodule Membrane.Tee.MasterTest do
       assert {{:ok, actions}, _state} = Master.handle_event(:input, event, nil, %{})
       assert actions == [forward: event]
     end
-
-    test "accepts demands from master" do
-      size = 100
-      assert {{:ok, actions}, _state} = Master.handle_demand(:master, size, :buffers, nil, %{})
-      assert actions == [demand: {:input, size}]
-    end
   end
 end
