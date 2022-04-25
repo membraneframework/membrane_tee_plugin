@@ -30,7 +30,6 @@ defmodule Membrane.Tee.PipelineParallelTest do
   test "forward input to three outputs" do
     range = 1..100
     assert {:ok, pid} = make_pipeline(range)
-    assert Pipeline.play(pid) == :ok
 
     # Wait for EndOfStream message on every sink
     assert_end_of_stream(pid, :sink1, :input, 3000)
@@ -44,6 +43,6 @@ defmodule Membrane.Tee.PipelineParallelTest do
       assert_sink_buffer(pid, :sink3, %Buffer{payload: ^element})
     end)
 
-    Pipeline.stop_and_terminate(pid, blocking?: true)
+    Pipeline.terminate(pid, blocking?: true)
   end
 end
