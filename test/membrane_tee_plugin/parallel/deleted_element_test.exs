@@ -44,14 +44,13 @@ defmodule Membrane.Tee.DeletedElementTest do
   test "delete sink1" do
     range = 1..100
     assert {:ok, pid} = make_pipeline(range)
-    assert Pipeline.play(pid) == :ok
-    Pipeline.stop(pid)
+    Pipeline.execute_actions(pid, playback: :stopped)
 
     # remove element sink1
     send(pid, {:delete, :sink1})
 
-    Pipeline.play(pid)
-    assert Pipeline.play(pid) == :ok
+    Pipeline.execute_actions(pid, playback: :playing)
+    Pipeline.execute_actions(pid, playback: :playing)
 
     assert_end_of_stream(pid, :sink2, :input, 3000)
 
@@ -59,6 +58,6 @@ defmodule Membrane.Tee.DeletedElementTest do
       assert_sink_buffer(pid, :sink2, %Buffer{payload: ^element})
     end)
 
-    Pipeline.stop_and_terminate(pid, blocking?: true)
+    Pipeline.terminate(pid, blocking?: true)
   end
 end
