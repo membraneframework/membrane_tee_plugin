@@ -4,6 +4,8 @@ defmodule Membrane.Tee.PushOutput do
   """
   use Membrane.Filter
 
+  alias Membrane.Tee.Common
+
   def_input_pad :input,
     availability: :always,
     mode: :pull,
@@ -16,7 +18,16 @@ defmodule Membrane.Tee.PushOutput do
     caps: :any
 
   @impl true
-  def handle_process(:input, %Membrane.Buffer{} = buffer, _ctx, state) do
-    {{:ok, forward: buffer}, state}
-  end
+  def handle_init(opts), do: Common.handle_init(opts)
+
+  @impl true
+  def handle_caps(pad, caps, ctx, state), do: Common.handle_caps(pad, caps, ctx, state)
+
+  @impl true
+  def handle_pad_added(Pad.ref(:output, _ref) = pad, ctx, state),
+    do: Common.handle_pad_added(pad, ctx, state)
+
+  @impl true
+  def handle_process(:input = pad, %Membrane.Buffer{} = buffer, ctx, state),
+    do: Common.handle_process(pad, buffer, ctx, state)
 end
