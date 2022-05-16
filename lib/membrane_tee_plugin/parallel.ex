@@ -11,8 +11,6 @@ defmodule Membrane.Tee.Parallel do
 
   use Membrane.Filter
 
-  alias Membrane.Tee.Common
-
   def_input_pad :input,
     availability: :always,
     mode: :pull,
@@ -26,16 +24,27 @@ defmodule Membrane.Tee.Parallel do
     caps: :any
 
   @impl true
-  def handle_init(opts), do: Common.handle_init(opts)
+  def handle_init(_opts) do
+    {:ok, %{caps: nil}}
+  end
 
   @impl true
-  def handle_caps(pad, caps, ctx, state), do: Common.handle_caps(pad, caps, ctx, state)
+  def handle_caps(_pad, caps, _ctx, state) do
+    {{:ok, forward: caps}, %{state | caps: caps}}
+  end
 
   @impl true
-  def handle_pad_added(Pad.ref(:output, _ref) = pad, ctx, state),
-    do: Common.handle_pad_added(pad, ctx, state)
+  def handle_pad_added(Pad.ref(:output, _ref), _ctx, %{caps: nil} = state) do
+    {:ok, state}
+  end
 
   @impl true
-  def handle_process(:input = pad, %Membrane.Buffer{} = buffer, ctx, state),
-    do: Common.handle_process(pad, buffer, ctx, state)
+  def handle_pad_added(pad, _ctx, %{caps: caps} = state) do
+    {{:ok, caps: {pad, caps}}, state}
+  end
+
+  @impl true
+  def handle_process(:input, %Membrane.Buffer{} = buffer, _ctx, state) do
+    {{:ok, forward: buffer}, state}
+  end
 end
