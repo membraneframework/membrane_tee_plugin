@@ -24,6 +24,26 @@ defmodule Membrane.Tee.Parallel do
     caps: :any
 
   @impl true
+  def handle_init(_opts) do
+    {:ok, %{caps: nil}}
+  end
+
+  @impl true
+  def handle_caps(_pad, caps, _ctx, state) do
+    {{:ok, forward: caps}, %{state | caps: caps}}
+  end
+
+  @impl true
+  def handle_pad_added(Pad.ref(:output, _ref), _ctx, %{caps: nil} = state) do
+    {:ok, state}
+  end
+
+  @impl true
+  def handle_pad_added(pad, _ctx, %{caps: caps} = state) do
+    {{:ok, caps: {pad, caps}}, state}
+  end
+
+  @impl true
   def handle_process(:input, %Membrane.Buffer{} = buffer, _ctx, state) do
     {{:ok, forward: buffer}, state}
   end

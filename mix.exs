@@ -9,6 +9,7 @@ defmodule Membrane.Tee.MixProject do
       app: :membrane_tee_plugin,
       version: @version,
       elixir: "~> 1.12",
+      elixirc_paths: elixirc_paths(Mix.env()),
       name: "Membrane Tee Plugin",
       description: "Plugin for splitting data from a single input to multiple outputs",
       package: package(),
@@ -18,6 +19,9 @@ defmodule Membrane.Tee.MixProject do
       deps: deps()
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_env), do: ["lib"]
 
   defp docs do
     [

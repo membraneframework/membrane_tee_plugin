@@ -35,10 +35,7 @@ defmodule Membrane.Tee.DeletedElementTest do
   end
 
   def make_pipeline(data) do
-    Pipeline.start_link(%Pipeline.Options{
-      module: Pipe,
-      custom_args: data
-    })
+    Pipeline.start_link(module: Pipe, custom_args: data)
   end
 
   test "delete sink1" do

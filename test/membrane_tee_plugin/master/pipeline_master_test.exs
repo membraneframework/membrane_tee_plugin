@@ -11,8 +11,8 @@ defmodule Membrane.Tee.PipelineMasterTest do
   def make_pipeline(data) do
     import Membrane.ParentSpec
 
-    Pipeline.start_link(%Pipeline.Options{
-      elements: [
+    Pipeline.start_link(
+      children: [
         src: %Source{output: data},
         tee: Membrane.Tee.Master,
         sink1: %Sink{},
@@ -22,7 +22,7 @@ defmodule Membrane.Tee.PipelineMasterTest do
         link(:src) |> to(:tee) |> via_out(:master) |> to(:sink1),
         link(:tee) |> via_out(:copy) |> to(:sink2)
       ]
-    })
+    )
   end
 
   test "forward input to two outputs" do

@@ -11,8 +11,8 @@ defmodule Membrane.Tee.PipelineParallelTest do
   def make_pipeline(data) do
     import Membrane.ParentSpec
 
-    Pipeline.start_link(%Pipeline.Options{
-      elements: [
+    Pipeline.start_link(
+      children: [
         src: %Source{output: data},
         tee: Membrane.Tee.Parallel,
         sink1: %Sink{},
@@ -24,7 +24,7 @@ defmodule Membrane.Tee.PipelineParallelTest do
         link(:tee) |> to(:sink2),
         link(:tee) |> to(:sink3)
       ]
-    })
+    )
   end
 
   test "forward input to three outputs" do
