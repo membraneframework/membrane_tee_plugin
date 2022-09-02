@@ -8,6 +8,7 @@ defmodule Membrane.Tee.PushOutput.PipelineTest do
   alias Membrane.Buffer
   alias Membrane.Testing.{Pipeline, Sink, Source}
 
+  @spec make_pipeline(Enumerable.t()) :: GenServer.on_start()
   def make_pipeline(data) do
     import Membrane.ParentSpec
 
