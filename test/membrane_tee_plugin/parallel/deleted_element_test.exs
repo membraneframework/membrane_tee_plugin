@@ -6,7 +6,7 @@ defmodule Membrane.Tee.DeletedElementTest do
   import Membrane.Testing.Assertions
 
   alias Membrane.Buffer
-  alias Membrane.Testing.{Source, Pipeline, Sink}
+  alias Membrane.Testing.{Pipeline, Sink, Source}
 
   defmodule Pipe do
     use Membrane.Pipeline

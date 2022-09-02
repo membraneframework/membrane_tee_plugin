@@ -6,7 +6,7 @@ defmodule Membrane.Tee.PipelineMasterTest do
   import Membrane.Testing.Assertions
 
   alias Membrane.Buffer
-  alias Membrane.Testing.{Source, Pipeline, Sink}
+  alias Membrane.Testing.{Pipeline, Sink, Source}
 
   def make_pipeline(data) do
     import Membrane.ParentSpec

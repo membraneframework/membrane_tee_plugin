@@ -4,8 +4,8 @@ defmodule Membrane.Tee.ParallelTest do
   require Membrane.Pad
 
   alias Membrane.Pad
-  alias Membrane.Tee.Parallel
   alias Membrane.Tee.CommonTest
+  alias Membrane.Tee.Parallel
 
   describe "Tee Parallel element" do
     test "passes received buffers to all pads" do
