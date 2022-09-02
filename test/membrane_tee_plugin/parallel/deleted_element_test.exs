@@ -6,7 +6,7 @@ defmodule Membrane.Tee.DeletedElementTest do
   import Membrane.Testing.Assertions
 
   alias Membrane.Buffer
-  alias Membrane.Testing.{Source, Pipeline, Sink}
+  alias Membrane.Testing.{Pipeline, Sink, Source}
 
   defmodule Pipe do
     use Membrane.Pipeline
@@ -34,6 +34,7 @@ defmodule Membrane.Tee.DeletedElementTest do
     end
   end
 
+  @spec make_pipeline(Membrane.Pipeline.pipeline_options_t()) :: GenServer.on_start()
   def make_pipeline(data) do
     Pipeline.start_link(module: Pipe, custom_args: data)
   end

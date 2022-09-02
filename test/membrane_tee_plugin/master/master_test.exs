@@ -4,8 +4,8 @@ defmodule Membrane.Tee.MasterTest do
   require Membrane.Pad
 
   alias Membrane.Pad
-  alias Membrane.Tee.Master
   alias Membrane.Tee.CommonTest
+  alias Membrane.Tee.Master
 
   describe "Tee Master element" do
     test "passes received buffers to all pads" do

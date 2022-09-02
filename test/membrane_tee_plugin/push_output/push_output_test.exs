@@ -4,8 +4,8 @@ defmodule Membrane.Tee.PushOutputTest do
   require Membrane.Pad
 
   alias Membrane.Pad
-  alias Membrane.Tee.PushOutput
   alias Membrane.Tee.CommonTest
+  alias Membrane.Tee.PushOutput
 
   describe "Tee PushOutput element" do
     test "passes received buffers to all pads" do
