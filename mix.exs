@@ -10,13 +10,19 @@ defmodule Membrane.Tee.MixProject do
       version: @version,
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
-      name: "Membrane Tee Plugin",
+      start_permanent: Mix.env() == :prod,
+      deps: deps(),
+      dialyzer: dialyzer(),
+
+      # hex
       description: "Plugin for splitting data from a single input to multiple outputs",
       package: package(),
+
+      # docs
+      name: "Membrane Tee Plugin",
       source_url: @github_url,
-      docs: docs(),
-      start_permanent: Mix.env() == :prod,
-      deps: deps()
+      homepage_url: "https://membrane.stream",
+      docs: docs()
     ]
   end
 
@@ -27,7 +33,9 @@ defmodule Membrane.Tee.MixProject do
     [
       main: "readme",
       extras: ["README.md", "LICENSE"],
-      source_ref: "v#{@version}"
+      formatters: ["html"],
+      source_ref: "v#{@version}",
+      nest_modules_by_prefix: [Membrane.Tee]
     ]
   end
 
@@ -39,6 +47,19 @@ defmodule Membrane.Tee.MixProject do
       {:dialyxir, "~> 1.1", only: :dev, runtime: false},
       {:credo, "~> 1.6.1", only: :dev, runtime: false}
     ]
+  end
+
+  defp dialyzer() do
+    opts = [
+      flags: [:error_handling]
+    ]
+
+    if System.get_env("CI") == "true" do
+      # Store PLTs in cacheable directory for CI
+      [plt_local_path: "priv/plts", plt_core_path: "priv/plts"] ++ opts
+    else
+      opts
+    end
   end
 
   defp package do
