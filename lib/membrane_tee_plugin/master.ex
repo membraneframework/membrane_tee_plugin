@@ -14,40 +14,44 @@ defmodule Membrane.Tee.Master do
   def_input_pad :input,
     availability: :always,
     demand_mode: :auto,
-    caps: :any
+    accepted_format: _any
 
   def_output_pad :master,
     availability: :always,
     demand_mode: :auto,
-    caps: :any
+    accepted_format: _any
 
   def_output_pad :copy,
     availability: :on_request,
     mode: :push,
-    caps: :any
+    accepted_format: _any
 
   @impl true
-  def handle_init(_opts) do
-    {:ok, %{caps: nil}}
+  def handle_init(_ctx, _opts) do
+    {[], %{accepted_format: nil}}
   end
 
   @impl true
-  def handle_caps(_pad, caps, _ctx, state) do
-    {{:ok, forward: caps}, %{state | caps: caps}}
+  def handle_stream_format(_pad, accepted_format, _ctx, state) do
+    {[forward: accepted_format], %{state | accepted_format: accepted_format}}
   end
 
   @impl true
-  def handle_pad_added(Pad.ref(:copy, _ref), _ctx, %{caps: nil} = state) do
-    {:ok, state}
+  def handle_pad_added(Pad.ref(:copy, _ref), _ctx, %{accepted_format: nil} = state) do
+    {[], state}
   end
 
   @impl true
-  def handle_pad_added(Pad.ref(:copy, _ref) = pad, _ctx, %{caps: caps} = state) do
-    {{:ok, caps: {pad, caps}}, state}
+  def handle_pad_added(
+        Pad.ref(:copy, _ref) = pad,
+        _ctx,
+        %{accepted_format: accepted_format} = state
+      ) do
+    {[stream_format: {pad, accepted_format}], state}
   end
 
   @impl true
   def handle_process(:input, %Membrane.Buffer{} = buffer, _ctx, state) do
-    {{:ok, forward: buffer}, state}
+    {[forward: buffer], state}
   end
 end

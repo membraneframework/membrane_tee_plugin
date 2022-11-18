@@ -10,27 +10,21 @@ defmodule Membrane.Tee.PushOutput.PipelineTest do
 
   @spec make_pipeline(Enumerable.t()) :: GenServer.on_start()
   def make_pipeline(data) do
-    import Membrane.ParentSpec
+    import Membrane.ChildrenSpec
 
-    Pipeline.start_link(%Pipeline.Options{
-      elements: [
-        src: %Source{output: data},
-        tee: Membrane.Tee.PushOutput,
-        sink1: %Sink{},
-        sink2: %Sink{},
-        sink3: %Sink{}
-      ],
-      links: [
-        link(:src) |> to(:tee) |> to(:sink1),
-        link(:tee) |> to(:sink2),
-        link(:tee) |> to(:sink3)
+    Pipeline.start_link(
+      structure: [
+        child(:tee, Membrane.Tee.PushOutput),
+        child(:src, %Source{output: data}) |> get_child(:tee) |> child(:sink1, %Sink{}),
+        get_child(:tee) |> child(:sink2, %Sink{}),
+        get_child(:tee) |> child(:sink3, %Sink{})
       ]
-    })
+    )
   end
 
   test "forward input to three outputs" do
     range = 1..100
-    assert {:ok, pid} = make_pipeline(range)
+    assert {:ok, _supervised_pid, pid} = make_pipeline(range)
 
     # Wait for EndOfStream message on every sink
     assert_end_of_stream(pid, :sink1, :input, 3000)
