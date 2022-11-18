@@ -12,25 +12,14 @@ defmodule Membrane.Tee.DeletedElementTest do
     use Membrane.Pipeline
 
     @impl true
-    def handle_init(data) do
-      children = [
-        src: %Source{output: data},
-        tee: Membrane.Tee.Parallel,
-        sink1: %Sink{},
-        sink2: %Sink{}
-      ]
-
+    def handle_init(_ctx, data) do
       links = [
-        link(:src) |> to(:tee) |> to(:sink1),
-        link(:tee) |> to(:sink2)
+        child(:tee, Membrane.Tee.Parallel),
+        child(:src, %Source{output: data}) |> get_child(:tee) |> child(:sink1, %Sink{}),
+        get_child(:tee) |> child(:sink2, %Sink{})
       ]
 
-      spec = %ParentSpec{
-        children: children,
-        links: links
-      }
-
-      {{:ok, spec: spec}, %{}}
+      {[spec: links], %{}}
     end
   end
 
@@ -41,8 +30,7 @@ defmodule Membrane.Tee.DeletedElementTest do
 
   test "delete sink1" do
     range = 1..100
-    assert {:ok, pid} = make_pipeline(range)
-    Pipeline.execute_actions(pid, playback: :stopped)
+    assert {:ok, _supervisior_pid, pid} = make_pipeline(range)
 
     # remove element sink1
     send(pid, {:delete, :sink1})
