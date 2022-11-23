@@ -1,7 +1,7 @@
 defmodule Membrane.Tee.MixProject do
   use Mix.Project
 
-  @version "0.10.0"
+  @version "0.10.1"
   @github_url "https://github.com/membraneframework/membrane_tee_plugin"
 
   def project do

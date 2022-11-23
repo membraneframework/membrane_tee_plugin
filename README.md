@@ -13,7 +13,7 @@ This package can be installed by adding `membrane_tee_plugin` to your list of de
 ```elixir
 def deps do
   [
-    {:membrane_tee_plugin, "~> 0.10.0"}
+    {:membrane_tee_plugin, "~> 0.10.1"}
   ]
 end
 ```
@@ -76,7 +76,7 @@ defmodule AudioPlayAndCopyPipeline do
   alias Membrane.{File, Tee, PortAudio}
 
   @impl true
-  def handle_init(_ctx, _) do
+  def handle_init(_ctx, _opts) do
     links = [
       child(:tee, Tee.Master),
       child(:file_src, %File.Source{location: "/tmp/source_file.mp3"}) |> get_child(:tee),
