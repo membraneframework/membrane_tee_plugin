@@ -13,7 +13,7 @@ This package can be installed by adding `membrane_tee_plugin` to your list of de
 ```elixir
 def deps do
   [
-    {:membrane_tee_plugin, "~> 0.10.0"}
+    {:membrane_tee_plugin, "~> 0.10.1"}
   ]
 end
 ```
@@ -40,19 +40,16 @@ defmodule FileMultiForwardPipeline do
   alias Membrane.{File, Tee}
 
   @impl true
-  def handle_init(_) do
-    children = [
-      file_src: %File.Source{location: "/tmp/source_text_file"},
-      tee: Tee.Parallel,
-      file_sink1: %File.Sink{location: "/tmp/destination_file1"},
-      file_sink2: %File.Sink{location: "/tmp/destination_file2"},
-    ]
+  def handle_init(_ctx, _state) do
+
     links = [
-      link(:file_src) |> to(:tee) |> to(:file_sink1),
-      link(:tee) |> to(:file_sink2)
+      child(:tee, Tee.Parallel),
+      child(file_src, %File.Source{location: "/tmp/source_text_file"}) 
+      |> get_child(:tee) |> child(:file_sink1, %File.Sink{location: "/tmp/destination_file1"}),
+      get_child(:tee) |> child(:file_sink2, %File.Sink{location: "/tmp/destination_file2"})
     ]
 
-    {{:ok, %ParentSpec{children: children, links: links}}, %{}}
+    {[spec: links], %{}}
   end
 end
 ```
@@ -79,20 +76,15 @@ defmodule AudioPlayAndCopyPipeline do
   alias Membrane.{File, Tee, PortAudio}
 
   @impl true
-  def handle_init(_) do
-    children = [
-      file_src: %File.Source{location: "/tmp/source_file.mp3"},
-      tee: Tee.Master,
-      audio_sink: PortAudio.Sink,
-      file_sink: %File.Sink{location: "/tmp/destination_file.mp3"},
-    ]
+  def handle_init(_ctx, _opts) do
     links = [
-      link(:file_src) |> to(:tee),
-      link(:tee) |> via_out(:master) |> to(:audio_sink),
-      link(:tee) |> via_out(:copy) |> to(:file_sink)
+      child(:tee, Tee.Master),
+      child(:file_src, %File.Source{location: "/tmp/source_file.mp3"}) |> get_child(:tee),
+      get_child(:tee) |> via_out(:master) |> child(:audio_sink,PortAudio.Sink),
+      get_child(:tee) |> via_out(:copy) |> to(:file_sink,%File.Sink{location: "/tmp/destination_file.mp3"})
     ]
 
-    {{:ok, %ParentSpec{children: children, links: links}}, %{}}
+    {[spec: links], %{}}
   end
 end
 ```
