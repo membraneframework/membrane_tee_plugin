@@ -13,7 +13,7 @@ This package can be installed by adding `membrane_tee_plugin` to your list of de
 ```elixir
 def deps do
   [
-    {:membrane_tee_plugin, "~> 0.10.1"}
+	{:membrane_tee_plugin, "~> 0.11.0"}
   ]
 end
 ```
