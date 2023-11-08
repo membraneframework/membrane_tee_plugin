@@ -6,7 +6,7 @@ defmodule Membrane.Tee.CommonTest do
   @spec passes_received_buffers_to_all_pads(atom) :: :ok
   def passes_received_buffers_to_all_pads(tee) do
     buffer = %Membrane.Buffer{payload: 123}
-    assert {actions, _state} = tee.handle_process(:input, buffer, nil, %{accepted_format: %{}})
+    assert {actions, _state} = tee.handle_buffer(:input, buffer, nil, %{accepted_format: %{}})
     assert actions == [forward: buffer]
     :ok
   end

@@ -13,7 +13,7 @@ defmodule Membrane.Tee.PushOutput.PipelineTest do
     import Membrane.ChildrenSpec
 
     Pipeline.start_link(
-      structure: [
+      spec: [
         child(:tee, Membrane.Tee.PushOutput),
         child(:src, %Source{output: data}) |> get_child(:tee) |> child(:sink1, %Sink{}),
         get_child(:tee) |> child(:sink2, %Sink{}),
@@ -38,6 +38,6 @@ defmodule Membrane.Tee.PushOutput.PipelineTest do
       assert_sink_buffer(pid, :sink3, %Buffer{payload: ^element})
     end)
 
-    Pipeline.terminate(pid, blocking?: true)
+    Pipeline.terminate(pid)
   end
 end

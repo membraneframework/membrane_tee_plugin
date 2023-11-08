@@ -6,13 +6,12 @@ defmodule Membrane.Tee.PushOutput do
 
   def_input_pad :input,
     availability: :always,
-    mode: :pull,
-    demand_mode: :auto,
+    flow_control: :auto,
     accepted_format: _any
 
   def_output_pad :output,
     availability: :on_request,
-    mode: :push,
+    flow_control: :push,
     accepted_format: _any
 
   @impl true
@@ -40,7 +39,7 @@ defmodule Membrane.Tee.PushOutput do
   end
 
   @impl true
-  def handle_process(:input, %Membrane.Buffer{} = buffer, _ctx, state) do
+  def handle_buffer(:input, %Membrane.Buffer{} = buffer, _ctx, state) do
     {[forward: buffer], state}
   end
 end
