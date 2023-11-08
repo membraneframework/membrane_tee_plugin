@@ -35,15 +35,12 @@ defmodule Membrane.Tee.DeletedElementTest do
     # remove element sink1
     send(pid, {:delete, :sink1})
 
-    Pipeline.execute_actions(pid, playback: :playing)
-    Pipeline.execute_actions(pid, playback: :playing)
-
     assert_end_of_stream(pid, :sink2, :input, 3000)
 
     Enum.each(range, fn element ->
       assert_sink_buffer(pid, :sink2, %Buffer{payload: ^element})
     end)
 
-    Pipeline.terminate(pid, blocking?: true)
+    Pipeline.terminate(pid)
   end
 end
