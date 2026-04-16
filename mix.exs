@@ -45,7 +45,7 @@ defmodule Membrane.Tee.MixProject do
       {:bunch, "~> 1.0"},
       {:ex_doc, "~> 0.26", only: :dev, runtime: false},
       {:dialyxir, "~> 1.1", only: :dev, runtime: false},
-      {:credo, "~> 1.6.1", only: :dev, runtime: false}
+      {:credo, "~> 1.6", only: :dev, runtime: false}
     ]
   end
 
