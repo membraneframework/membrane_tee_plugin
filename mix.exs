@@ -1,7 +1,7 @@
 defmodule Membrane.Tee.MixProject do
   use Mix.Project
 
-  @version "0.12.1"
+  @version "0.12.2"
   @github_url "https://github.com/membraneframework/membrane_tee_plugin"
 
   def project do
@@ -15,14 +15,15 @@ defmodule Membrane.Tee.MixProject do
       dialyzer: dialyzer(),
 
       # hex
-      description: "Plugin for splitting data from a single input to multiple outputs",
+      description: "Splits a single stream into multiple identical outputs.",
       package: package(),
 
       # docs
       name: "Membrane Tee Plugin",
       source_url: @github_url,
       homepage_url: "https://membrane.stream",
-      docs: docs()
+      docs: docs(),
+      aliases: [docs: ["docs", &prepend_llms_links/1]]
     ]
   end
 
@@ -33,7 +34,6 @@ defmodule Membrane.Tee.MixProject do
     [
       main: "readme",
       extras: ["README.md", "LICENSE"],
-      formatters: ["html"],
       source_ref: "v#{@version}",
       nest_modules_by_prefix: [Membrane.Tee]
     ]
@@ -43,7 +43,7 @@ defmodule Membrane.Tee.MixProject do
     [
       {:membrane_core, "~> 1.0"},
       {:bunch, "~> 1.0"},
-      {:ex_doc, "~> 0.26", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.40", only: :dev, runtime: false},
       {:dialyxir, "~> 1.1", only: :dev, runtime: false},
       {:credo, "~> 1.6", only: :dev, runtime: false}
     ]
@@ -71,5 +71,17 @@ defmodule Membrane.Tee.MixProject do
         "Membrane Framework Homepage" => "https://membraneframework.org"
       }
     ]
+  end
+
+  defp prepend_llms_links(_) do
+    path = "doc/llms.txt"
+
+    if File.exists?(path) do
+      existing = File.read!(path)
+
+      header = "- [Membrane Core](https://hexdocs.pm/membrane_core/llms.txt)\n\n"
+
+      File.write!(path, header <> existing)
+    end
   end
 end
