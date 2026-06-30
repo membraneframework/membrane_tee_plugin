@@ -51,10 +51,6 @@ defmodule Membrane.Tee.CommonTest do
 
     output_pads = [Pad.ref(:output, 0), Pad.ref(:output, 1)]
 
-    # Since membrane_core 1.3.0 the default `Membrane.Filter.handle_event/4`
-    # reads `context.pads[pad].direction` to forward the event to every pad of
-    # the opposite direction, so a valid context with the input and output pads
-    # has to be passed.
     context = %{
       pads:
         output_pads
