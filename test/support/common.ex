@@ -3,6 +3,10 @@ defmodule Membrane.Tee.CommonTest do
 
   import ExUnit.Assertions
 
+  require Membrane.Pad
+
+  alias Membrane.Pad
+
   @spec passes_received_buffers_to_all_pads(atom) :: :ok
   def passes_received_buffers_to_all_pads(tee) do
     buffer = %Membrane.Buffer{payload: 123}
@@ -44,8 +48,24 @@ defmodule Membrane.Tee.CommonTest do
   def passes_received_events_to_all_pads(tee) do
     alias Membrane.Event.Discontinuity
     event = %Discontinuity{}
-    assert {actions, _state} = tee.handle_event(:input, event, nil, %{accepted_format: :any})
-    assert actions == [forward: event]
+
+    output_pads = [Pad.ref(:output, 0), Pad.ref(:output, 1)]
+
+    # Since membrane_core 1.3.0 the default `Membrane.Filter.handle_event/4`
+    # reads `context.pads[pad].direction` to forward the event to every pad of
+    # the opposite direction, so a valid context with the input and output pads
+    # has to be passed.
+    context = %{
+      pads:
+        output_pads
+        |> Map.new(&{&1, %{direction: :output}})
+        |> Map.put(:input, %{direction: :input})
+    }
+
+    assert {actions, _state} =
+             tee.handle_event(:input, event, context, %{accepted_format: :any})
+
+    assert Enum.sort(actions) == Enum.sort(Enum.map(output_pads, &{:event, {&1, event}}))
     :ok
   end
 end
